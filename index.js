@@ -3,7 +3,7 @@ const debug = require('debug')('udger-nodejs');
 const Address6 = require('ip-address').Address6;
 const utils = require('./utils');
 const fs = require('fs-extra');
-const dotProp = require('dot-prop');
+import dotProp from 'dot-prop'
 const path = require('path');
 const RandExp = require('randexp');
 
