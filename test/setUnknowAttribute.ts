@@ -6,6 +6,7 @@ tap.test(
     (t) => {
         t.throws(
             ()=> {
+                // @ts-expect-error
                 config.udgerParser.set({ foo:'bar' });
             },
             {}

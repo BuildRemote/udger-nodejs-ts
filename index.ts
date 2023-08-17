@@ -17,21 +17,21 @@ const __dirname = dirname(__filename);
 class UdgerParser {
     db: any;
     file: any;
-    ip: null;
-    ua: null;
+    ip: string | null;
+    ua: string | null;
     cacheEnable: boolean;
     cacheMaxRecords: number;
-    cache: {};
+    cache: any;
     keyCache: string;
     defaultRet: any;
-    retUa: {};
-    retIp: {};
+    retUa: any;
+    retIp: any;
 
     /**
      * Load udger SQLite3 database.
      * @param {string} file - full path to udgerdb_v3.dat
      */
-    constructor(file) {
+    constructor(file: string) {
         this.db = new Database(file, { readonly: true, fileMustExist: true });
         this.file = file;
         this.ip = null;
@@ -83,7 +83,7 @@ class UdgerParser {
      * @param {String} data.ua - User-Agent
      * @param {String} data.ip - IP Address
      */
-    set(data) {
+    set(data: { ua?: string, ip?: string }) {
 
         const help = 'set() is waiting for an object having only ip and/or ua attribute';
 
@@ -105,7 +105,7 @@ class UdgerParser {
             }
         }
 
-        this.keyCache =  '';
+        this.keyCache = '';
 
         if (this.cacheEnable) {
             if (this.ip) this.keyCache = this.ip;
@@ -120,7 +120,7 @@ class UdgerParser {
      * Activate cache
      * @param {Boolean} cache - true or false
      */
-    setCacheEnable(cache) {
+    setCacheEnable(cache: boolean) {
         this.cacheEnable = cache;
     }
 
@@ -136,16 +136,16 @@ class UdgerParser {
      * Set Cache Size
      * @param {Number} records - the maximum number of items we want to keep in the cache
      */
-    setCacheSize(records) {
+    setCacheSize(records: number) {
         this.cacheMaxRecords = records;
     }
 
     /**
      * Check if a key exist in the cache
-     * @param {Number} key - key can be UA or UA+IP
+     * @param {String} key - key can be UA or UA+IP
      * @return {Boolean} return true if the key exist in the cache, false if not
      */
-    cacheKeyExist(key) {
+    cacheKeyExist(key: string) {
         if (this.cache[key]) {
             return true;
         }
@@ -157,7 +157,7 @@ class UdgerParser {
      * @param {String} key - key can be UA or UA+IP
      * @return {Object} stored parser result
      */
-    cacheRead(key, opts) {
+    cacheRead(key: string, opts: { json: any; full: any; }) {
         const ret = this.cache[key];
         if (opts && opts.json) {
             if (opts.full) {
@@ -173,7 +173,7 @@ class UdgerParser {
      * Write an item into the cache
      * @param {String} key - key can be UA or UA+IP
      */
-    cacheWrite(key, data) {
+    cacheWrite(key: string, data: any) {
         if (this.cache[key]) {
             // already in the cache
             return;
@@ -205,7 +205,7 @@ class UdgerParser {
      * Parse the User-Agent string
      * @param {String} ua - An User-Agent string
      */
-    parseUa(ua, opts) {
+    parseUa(ua: string, opts: { full: any; }) {
 
         const rua = JSON.parse(JSON.stringify(this.retUa));
         const ruaJson = {};
@@ -596,8 +596,8 @@ class UdgerParser {
                 rua['os_code']
             ];
 
-            let match;
-            let rId;
+            let match: any;
+            let rId: any;
             for (const r of q.iterate(bindParams)) {
                 e = ua.match(utils.phpRegexpToJs(r['regstring']));
                 if (e && e[1]) {
@@ -651,7 +651,7 @@ class UdgerParser {
      * Parse the IP Address
      * @param {String} ip - An IPv4 or IPv6 Address
      */
-    parseIp(ip, opts) {
+    parseIp(ip: string, opts: { full: any; }) {
 
         const rip = JSON.parse(JSON.stringify(this.retIp));
         const ripJson = {};
@@ -665,7 +665,7 @@ class UdgerParser {
         let q;
         let r;
         let ipInt;
-        let ipa;
+        let ipa: Address6;
 
         debug('parse IP address: START (IP: ' + ip + ')');
 
@@ -814,7 +814,7 @@ class UdgerParser {
             ipa = new Address6(ip);
             const t = ipa.canonicalForm().split(':');
             const ipInts = {};
-            t.forEach((h, i) => {
+            t.forEach((h: string, i) => {
                 ipInts['ipInt'+i] = parseInt(h, 16);
             });
 
@@ -895,7 +895,7 @@ class UdgerParser {
         return ret;
     }
 
-    randomSanityChecks(max, callback) {
+    randomSanityChecks(max: number, callback) {
         if (!this.db) {
             callback(new Error('Database not ready'));
             return false;
@@ -914,7 +914,7 @@ class UdgerParser {
         return true;
     }
 
-    randomUACrawlers(max, callback) {
+    randomUACrawlers(max: number, callback) {
 
         if (!this.randomSanityChecks(max, callback)) return;
 
@@ -926,7 +926,7 @@ class UdgerParser {
         return;
     }
 
-    randomUAClientsRegex(max, callback) {
+    randomUAClientsRegex(max: number, callback) {
         if (!this.randomSanityChecks(max, callback)) return;
 
         const q = this.db.prepare(
@@ -937,7 +937,7 @@ class UdgerParser {
         return;
     }
 
-    randomUAClients(max, callback) {
+    randomUAClients(max: number, callback) {
 
         if (!this.randomSanityChecks(max, callback)) return;
         this.randomUAClientsRegex(max, (err, results) => {
@@ -977,7 +977,7 @@ class UdgerParser {
         });
     }
 
-    randomIPv4(max, callback) {
+    randomIPv4(max: number, callback) {
         if (!this.randomSanityChecks(max, callback)) return;
 
         const q = this.db.prepare(
@@ -1060,6 +1060,6 @@ class UdgerParser {
     }
 }
 
-export default function(file) {
+export default function(file: string) {
     return new UdgerParser(file);
 };
