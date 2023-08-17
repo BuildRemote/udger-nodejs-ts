@@ -4,14 +4,17 @@ debug('udger-nodejs')
 import { Address6 } from '@laverdet/beaugunderson-ip-address'
 import utils from './utils.js';
 import fs from 'fs-extra';
-import {getProperty, setProperty, hasProperty, deleteProperty} from 'dot-prop';
+import { setProperty, deleteProperty } from 'dot-prop';
 import path from 'path';
 import RandExp from 'randexp';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { IpAddressJsonCompactSchema, IpAddressJsonFullSchema, IpAddressUdger, IpAddressUdgerSchema, JsonSchema, Udger, UdgerJsonCompact, UdgerJsonFull, UdgerSchema, UserAgentJsonCompactSchema, UserAgentJsonFullSchema, UserAgentUdger, UserAgentUdgerSchema } from './zod.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+type formatOpts = { json?: boolean; full?: boolean; }
 
 /** Class exposing udger parser methods */
 class UdgerParser {
@@ -21,11 +24,11 @@ class UdgerParser {
     ua: string | null;
     cacheEnable: boolean;
     cacheMaxRecords: number;
-    cache: any;
-    keyCache: string;
-    defaultRet: any;
-    retUa: any;
-    retIp: any;
+    cache: {[cacheKey: string]: Udger};
+    keyCache: string; // ${ip}${ua}
+    defaultRet: Udger;
+    retUa: UserAgentUdger;
+    retIp: IpAddressUdger;
 
     /**
      * Load udger SQLite3 database.
@@ -152,12 +155,13 @@ class UdgerParser {
         return false;
     }
 
+
     /**
      * Return an item from the cache
      * @param {String} key - key can be UA or UA+IP
      * @return {Object} stored parser result
      */
-    cacheRead(key: string, opts: { json: any; full: any; }) {
+    cacheRead(key: string, opts: formatOpts) {
         const ret = this.cache[key];
         if (opts && opts.json) {
             if (opts.full) {
@@ -166,7 +170,12 @@ class UdgerParser {
         } else {
             ret['from_cache'] = true;
         }
-        return ret;
+
+        if (opts.json) {
+            return JsonSchema.parse(ret) // TODO: zod parser
+        }
+
+        return UdgerSchema.parse(ret);
     }
 
     /**
@@ -205,9 +214,9 @@ class UdgerParser {
      * Parse the User-Agent string
      * @param {String} ua - An User-Agent string
      */
-    parseUa(ua: string, opts: { full: any; }) {
+    parseUa(ua: string, opts: formatOpts) {
 
-        const rua = JSON.parse(JSON.stringify(this.retUa));
+        const rua = UserAgentUdgerSchema.parse(JSON.parse(JSON.stringify(this.retUa)))
         const ruaJson = {};
 
         if (!ua) return {
@@ -642,8 +651,8 @@ class UdgerParser {
         debug('parse useragent string: END, unset useragent string');
 
         return {
-            udger:rua,
-            json:ruaJson
+            udger: UserAgentUdgerSchema.parse(rua),
+            json: opts.full ? UserAgentJsonFullSchema.parse(ruaJson) : UserAgentJsonCompactSchema.parse(ruaJson)
         };
     }
 
@@ -651,9 +660,9 @@ class UdgerParser {
      * Parse the IP Address
      * @param {String} ip - An IPv4 or IPv6 Address
      */
-    parseIp(ip: string, opts: { full: any; }) {
+    parseIp(ip: string, opts: formatOpts) {
 
-        const rip = JSON.parse(JSON.stringify(this.retIp));
+        const rip = IpAddressUdgerSchema.parse(JSON.parse(JSON.stringify(this.retIp)))
         const ripJson = {};
 
         if (!ip) return {
@@ -855,16 +864,29 @@ class UdgerParser {
         debug('parse IP address: END');
 
         return {
-            udger:rip,
-            json:ripJson
+            udger: IpAddressUdgerSchema.parse(rip),
+            json: opts.full ? IpAddressJsonFullSchema.parse(ripJson) : IpAddressJsonCompactSchema.parse(ripJson)
         };
+    }
+
+    parseUdger(): Udger {
+        return this.parse()
+    }
+
+    parseJsonCompact(): UdgerJsonCompact {
+        return this.parse({ json: true })
+    }
+
+    parseJsonFull(): UdgerJsonFull {
+        return this.parse({ json: true, full: true})
     }
 
     /**
      * Main parser
+     * @deprecated Use typed parsers (parseUdger, parseJsonCompact, parseJsonFull) instead
      * @return {Object} Parsing result
      */
-    parse(opts: any = {}) {
+    parse(opts: formatOpts = {}) {
 
         if (!this.db) return {};
 
