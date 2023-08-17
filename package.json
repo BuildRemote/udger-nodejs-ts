@@ -7,8 +7,17 @@
   "directories": {
     "test": "test"
   },
+  "tap": {
+    "coverage": false,
+    "node-arg": [
+      "--no-warnings",
+      "--loader",
+      "ts-node/esm"
+    ],
+    "ts": false
+  },
   "scripts": {
-    "test": "node node_modules/tap/bin/run.js test/*.js"
+    "test": "c8 tap"
   },
   "repository": {
     "url": "https://github.com/udger/udger-nodejs.git"
@@ -36,9 +45,13 @@
   },
   "homepage": "https://github.com/udger/udger-nodejs#readme",
   "devDependencies": {
+    "@types/tap": "^15.0.8",
+    "c8": "^8.0.1",
     "connect": "3.7.0",
     "merge-deep": "3.0.3",
-    "tap": "16.3.8"
+    "tap": "^16.3.8",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "@laverdet/beaugunderson-ip-address": "^8.1.0",

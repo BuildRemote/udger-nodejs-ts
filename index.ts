@@ -15,6 +15,17 @@ const __dirname = dirname(__filename);
 
 /** Class exposing udger parser methods */
 class UdgerParser {
+    db: any;
+    file: any;
+    ip: null;
+    ua: null;
+    cacheEnable: boolean;
+    cacheMaxRecords: number;
+    cache: {};
+    keyCache: string;
+    defaultRet: any;
+    retUa: {};
+    retIp: {};
 
     /**
      * Load udger SQLite3 database.
@@ -346,20 +357,20 @@ class UdgerParser {
                     if (rua['ua']) {
                         setProperty(ruaJson, 'ua.name', rua['ua']);
                     } else {
-                        dotProp.delete(ruaJson, 'ua.name');
+                        deleteProperty(ruaJson, 'ua.name');
                     }
 
                     if (opts.full) {
                         if (rua['ua_version']) {
                             setProperty(ruaJson, 'ua.version.current', rua['ua_version']);
                         } else {
-                            dotProp.delete(ruaJson, 'ua.version.current');
+                            deleteProperty(ruaJson, 'ua.version.current');
                         }
 
                         if (rua['ua_version_major']) {
                             setProperty(ruaJson, 'ua.version.current', rua['ua_version_major']);
                         } else {
-                            dotProp.delete(ruaJson, 'ua.version.current');
+                            deleteProperty(ruaJson, 'ua.version.current');
                         }
                     }
 
@@ -853,7 +864,7 @@ class UdgerParser {
      * Main parser
      * @return {Object} Parsing result
      */
-    parse(opts) {
+    parse(opts: any = {}) {
 
         if (!this.db) return {};
 
@@ -864,11 +875,11 @@ class UdgerParser {
             return this.cacheRead(this.keyCache, opts);
         }
 
-        const ret = {};
+        const ret: any = {};
         if (!opts) opts = {};
 
         if (opts.json) {
-            if (this.ua) ret.userAgent =this.parseUa(this.ua, opts).json;
+            if (this.ua) ret.userAgent = this.parseUa(this.ua, opts).json;
             if (this.ip) ret.ipAddress = this.parseIp(this.ip, opts).json;
             if (opts.full) ret.fromCache = false;
         } else {
