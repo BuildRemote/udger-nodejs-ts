@@ -1,7 +1,5 @@
-const tap = require('tap');
-const config = require('./lib/config');
-
-const defaultResult = config.defaultResult;
+import tap from 'tap';
+import config, { defaultResult } from './lib/config';
 
 const myUa = 'Googlebot/2.1 (+http://www.google.com/bot.html)';
 
