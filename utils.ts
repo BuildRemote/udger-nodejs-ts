@@ -1,16 +1,19 @@
 import { Address4, Address6 } from '@laverdet/beaugunderson-ip-address'
 
-function phpRegexpToJs(str) {
+function phpRegexpToJs(str: string) {
     let re = str.replace(/^\//, '').trim();
     let flags = re.match(/\/([a-z]{0,3})$/);
-    flags = flags[1].replace(/s/, '');
+    if (flags?.length == 0 || flags == null) {
+        throw "could not convert php regex to js"
+    }
+    const sFlags = flags[1].replace(/s/, '');
     re = re.replace(/\/[a-z]{0,3}$/, '');
-    return new RegExp(re, flags);
+    return new RegExp(re, sFlags);
 }
 
-function getIpVersion(ip) {
+function getIpVersion(ip: string) {
 
-    let addr;
+    let addr: Address6 | Address4 | undefined;
     try {
         addr = new Address6(ip);
     } catch(e) {
@@ -80,7 +83,7 @@ function inetPton (a) {
 function inetNtop (a) {
     let i = 0;
     let m = '';
-    const c = [];
+    const c: any = [];
     a += '';
     if (a.length === 4) {
         // IPv4
