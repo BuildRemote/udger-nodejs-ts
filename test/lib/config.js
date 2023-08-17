@@ -1,7 +1,7 @@
-const path = require('path');
-const fs = require('fs-extra');
+import path from 'path';
+import fs from 'fs-extra';
 const db = path.resolve(__dirname, '../db/udgerdb_v3_test.dat');
-const merge = require('merge-deep');
+import merge from 'merge-deep';
 
 const defaultResult = fs.readJsonSync('./defaultResult.json');
 

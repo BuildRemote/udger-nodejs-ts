@@ -1,5 +1,5 @@
-const tap = require('tap');
-const config = require('./lib/config');
+import tap from 'tap';
+import config from './lib/config';
 
 tap.test(
     'set: should failed because no data passed',
@@ -13,4 +13,3 @@ tap.test(
         t.end();
     }
 );
-

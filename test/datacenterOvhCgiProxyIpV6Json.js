@@ -1,5 +1,5 @@
-const tap = require('tap');
-const config = require('./lib/config');
+import tap from 'tap';
+import config from './lib/config';
 
 const myIp = '2001:41d0:8:d54c::1';
 

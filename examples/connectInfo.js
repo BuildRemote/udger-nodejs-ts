@@ -1,5 +1,5 @@
-const udgerParser = require('../')('test/db/udgerdb_v3_test.dat');
-const http = require('http');
+import udgerParser from '../')('test/db/udgerdb_v3_test.dat';
+import http from 'http';
 
 var app = require('connect')();
 

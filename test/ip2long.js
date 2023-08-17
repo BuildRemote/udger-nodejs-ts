@@ -1,5 +1,5 @@
-const tap = require('tap');
-const utils = require('../utils');
+import tap from 'tap';
+import utils from '../utils';
 
 tap.test(
     'ip2long',

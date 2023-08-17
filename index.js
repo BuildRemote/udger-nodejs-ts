@@ -1,11 +1,11 @@
-const Database = require('better-sqlite3');
-const debug = require('debug')('udger-nodejs');
+import Database from 'better-sqlite3';
+import debug from 'debug')('udger-nodejs';
 const Address6 = require('ip-address').Address6;
-const utils = require('./utils');
-const fs = require('fs-extra');
+import utils from './utils';
+import fs from 'fs-extra';
 import dotProp from 'dot-prop'
-const path = require('path');
-const RandExp = require('randexp');
+import path from 'path';
+import RandExp from 'randexp';
 
 /** Class exposing udger parser methods */
 class UdgerParser {
