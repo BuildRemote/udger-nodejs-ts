@@ -3,3 +3,4 @@
 /test/db/*
 .aider*
 coverage/
+dist/
