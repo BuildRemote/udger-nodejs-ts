@@ -1,5 +1,5 @@
 import tap from 'tap';
-import config, { defaultResult } from './lib/config';
+import config, { defaultResult } from './lib/config.js';
 
 const myUa = 'Googlebot/2.1 (+http://www.google.com/bot.html)';
 
