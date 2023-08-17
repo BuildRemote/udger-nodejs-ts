@@ -3,7 +3,7 @@
   "version": "1.5.0",
   "type": "module",
   "description": "NodeJS User-Agent String Parser based on Udger SQLite databases https://udger.com/products/local_parser",
-  "main": "index.js",
+  "exports": "./index.js",
   "directories": {
     "test": "test"
   },
@@ -41,10 +41,10 @@
     "tap": "16.3.8"
   },
   "dependencies": {
+    "@laverdet/beaugunderson-ip-address": "^8.1.0",
     "better-sqlite3": "8.5.1",
     "dot-prop": "8.0.2",
     "fs-extra": "11.1.1",
-    "ip-address": "8.1.0",
     "node-gyp": "9.4.0",
     "randexp": "0.5.3"
   }

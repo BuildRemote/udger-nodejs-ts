@@ -1,5 +1,5 @@
 import tap from 'tap';
-import config from './lib/config';
+import config from './lib/config.js';
 
 const myUa = 'PINGOMETER_BOT_(HTTPS://PINGOMETER.COM)';
 

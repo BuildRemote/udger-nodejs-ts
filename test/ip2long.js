@@ -1,5 +1,5 @@
 import tap from 'tap';
-import utils from '../utils';
+import utils from '../utils.js';
 
 tap.test(
     'ip2long',

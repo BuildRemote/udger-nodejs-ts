@@ -1,5 +1,4 @@
-const Address6 = require('ip-address').Address6;
-const Address4 = require('ip-address').Address4;
+import { Address4, Address6 } from '@laverdet/beaugunderson-ip-address'
 
 function phpRegexpToJs(str) {
     let re = str.replace(/^\//, '').trim();
@@ -123,11 +122,11 @@ function long2ip(longValue) {
     }).join('.');
 }
 
-module.exports = {
+export default {
     phpRegexpToJs,
     getIpVersion,
     inetPton,
     inetNtop,
     ip2long,
     long2ip
-};
+}

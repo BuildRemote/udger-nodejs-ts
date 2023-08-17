@@ -1,5 +1,5 @@
 import tap from 'tap';
-import config from './lib/config';
+import config from './lib/config.js';
 
 tap.test(
     'Get User-Agent Crawlers classification',

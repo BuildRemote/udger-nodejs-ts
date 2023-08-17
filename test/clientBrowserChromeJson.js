@@ -1,5 +1,5 @@
 import tap from 'tap';
-import config from './lib/config';
+import config from './lib/config.js';
 
 const myUa = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36';
 
