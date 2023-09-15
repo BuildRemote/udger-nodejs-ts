@@ -23,7 +23,7 @@
     "ts": false
   },
   "scripts": {
-    "build": "rm -r dist/ && tsc",
+    "build": "rm -r dist/ && tsc && cp defaultResult.json dist/",
     "prepublish": "yarn build",
     "test": "c8 tap"
   },
