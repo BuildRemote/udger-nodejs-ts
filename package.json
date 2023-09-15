@@ -1,6 +1,6 @@
 {
   "name": "@buildremote/udger-nodejs-ts",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "type": "module",
   "description": "NodeJS User-Agent String Parser based on Udger SQLite databases https://udger.com/products/local_parser",
   "exports": {
