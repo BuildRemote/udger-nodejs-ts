@@ -10,6 +10,7 @@
   "files": [
     "dist/"
   ],
+  "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
